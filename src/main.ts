@@ -348,6 +348,9 @@ function update(deltaTime: number): void {
 
       // Score popup
       scorePopups.push({ x: head.x, y: head.y, text: "+10", alpha: 1.0 });
+
+      // Particle burst
+      renderer.spawnParticles(head.x, head.y, "#fbbf24", 8);
     }
   }
 }
@@ -362,6 +365,9 @@ function handleGameOver(): void {
 
   // Play game over sound
   soundManager.playGameOver();
+
+  // Screen shake effect
+  renderer.shake(6, 400);
 
   // Save final score (updates high score and adds to history)
   if (score > highScore) {
@@ -422,6 +428,7 @@ function renderGame(deltaTime: number): void {
   renderer.drawFood(food.getPosition(), "#f87171", CELL_SIZE, pulsePhase);
 
   // Draw score popups
+  renderer.updateAndDrawParticles(deltaTime);
   for (let i = scorePopups.length - 1; i >= 0; i--) {
     const popup = scorePopups[i];
     renderer.drawScorePopup(

@@ -20,6 +20,15 @@ import type { Position } from "./Snake.ts";
 export class Renderer {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
+  private particles: Array<{
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    alpha: number;
+    color: string;
+    size: number;
+  }> = [];
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -180,5 +189,60 @@ export class Renderer {
     this.ctx.fillStyle = color;
     this.ctx.fillRect(Math.floor(x), Math.floor(y), width, height);
     this.ctx.restore();
+  }
+
+  spawnParticles(x: number, y: number, color: string, count = 8): void {
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 * i) / count + Math.random() * 0.5;
+      const speed = 1 + Math.random() * 2;
+      this.particles.push({
+        x: x + 10,
+        y: y + 10,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        alpha: 1,
+        color,
+        size: 2 + Math.random() * 2,
+      });
+    }
+  }
+
+  updateAndDrawParticles(deltaTime: number): void {
+    const factor = deltaTime / 16.67;
+    for (let i = this.particles.length - 1; i >= 0; i--) {
+      const p = this.particles[i];
+      p.x += p.vx * factor;
+      p.y += p.vy * factor;
+      p.alpha -= 0.03 * factor;
+      if (p.alpha <= 0) {
+        this.particles.splice(i, 1);
+        continue;
+      }
+      this.ctx.save();
+      this.ctx.globalAlpha = p.alpha;
+      this.ctx.fillStyle = p.color;
+      this.ctx.beginPath();
+      this.ctx.arc(Math.floor(p.x), Math.floor(p.y), p.size, 0, Math.PI * 2);
+      this.ctx.fill();
+      this.ctx.restore();
+    }
+  }
+
+  shake(intensity = 4, duration = 300): void {
+    const canvas = this.canvas;
+    const start = performance.now();
+    const shake = () => {
+      const elapsed = performance.now() - start;
+      if (elapsed >= duration) {
+        canvas.style.transform = "";
+        return;
+      }
+      const decay = 1 - elapsed / duration;
+      const dx = (Math.random() - 0.5) * intensity * decay * 2;
+      const dy = (Math.random() - 0.5) * intensity * decay * 2;
+      canvas.style.transform = `translate(${dx}px, ${dy}px)`;
+      requestAnimationFrame(shake);
+    };
+    requestAnimationFrame(shake);
   }
 }
