@@ -297,9 +297,7 @@ test.describe("Game Mechanics", () => {
     await page.goto("/");
     await page.click('button[data-testid="start-btn"]');
 
-    await page.waitForTimeout(300);
-
-    const pixelData = await page.evaluate(() => {
+    const pixelData = await page.waitForFunction(() => {
       const canvas = document.getElementById("game-canvas") as HTMLCanvasElement;
       const ctx = canvas.getContext("2d")!;
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -312,16 +310,14 @@ test.describe("Game Mechanics", () => {
       return nonBlackPixels;
     });
 
-    expect(pixelData).toBeGreaterThan(0);
+    expect(pixelData.jsonValue()).resolves.toBeGreaterThan(0);
   });
 
   test("should show snake and food on canvas during gameplay", async ({ page }) => {
     await page.goto("/");
     await page.click('button[data-testid="start-btn"]');
 
-    await page.waitForTimeout(200);
-
-    const hasGreenPixels = await page.evaluate(() => {
+    const hasGreenPixels = await page.waitForFunction(() => {
       const canvas = document.getElementById("game-canvas") as HTMLCanvasElement;
       const ctx = canvas.getContext("2d")!;
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -334,19 +330,30 @@ test.describe("Game Mechanics", () => {
       return false;
     });
 
-    expect(hasGreenPixels).toBe(true);
+    expect(await hasGreenPixels.jsonValue()).toBe(true);
   });
 
   test("should change direction with arrow keys during gameplay", async ({ page }) => {
     await page.goto("/");
     await page.click('button[data-testid="start-btn"]');
 
-    await page.waitForTimeout(200);
+    // Wait for canvas to have rendered content
+    await page.waitForFunction(() => {
+      const canvas = document.getElementById("game-canvas") as HTMLCanvasElement;
+      const ctx = canvas.getContext("2d")!;
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      let nonBlackPixels = 0;
+      for (let i = 0; i < imageData.data.length; i += 4) {
+        if (imageData.data[i] !== 0 || imageData.data[i + 1] !== 0 || imageData.data[i + 2] !== 0) {
+          nonBlackPixels++;
+        }
+      }
+      return nonBlackPixels > 0;
+    });
 
     await page.keyboard.press("ArrowUp");
-    await page.waitForTimeout(300);
 
-    const pixelCount = await page.evaluate(() => {
+    const pixelCount = await page.waitForFunction(() => {
       const canvas = document.getElementById("game-canvas") as HTMLCanvasElement;
       const ctx = canvas.getContext("2d")!;
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -359,19 +366,31 @@ test.describe("Game Mechanics", () => {
       return nonBlackPixels;
     });
 
-    expect(pixelCount).toBeGreaterThan(0);
+    expect(await pixelCount.jsonValue()).toBeGreaterThan(0);
   });
 
   test("should eventually show game over when snake hits wall", async ({ page }) => {
     await page.goto("/");
     await page.click('button[data-testid="start-btn"]');
 
-    // Wait for game to start, then rapidly alternate directions to force wall collision
-    await page.waitForTimeout(100);
+    // Wait for game to start rendering
+    await page.waitForFunction(() => {
+      const canvas = document.getElementById("game-canvas") as HTMLCanvasElement;
+      const ctx = canvas.getContext("2d")!;
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      let nonBlackPixels = 0;
+      for (let i = 0; i < imageData.data.length; i += 4) {
+        if (imageData.data[i] !== 0 || imageData.data[i + 1] !== 0 || imageData.data[i + 2] !== 0) {
+          nonBlackPixels++;
+        }
+      }
+      return nonBlackPixels > 0;
+    });
 
     // Send rapid right-arrow keys to speed the snake into the right wall
     for (let i = 0; i < 50; i++) {
       await page.keyboard.press("ArrowRight");
+      // Small delay to let the game process each move
       await page.waitForTimeout(80);
     }
 
@@ -381,7 +400,6 @@ test.describe("Game Mechanics", () => {
       .isVisible()
       .catch(() => false);
 
-    // The game should have hit a wall by now (50 moves at 80ms each = 4 seconds)
     expect(isGameOver).toBe(true);
   });
 
@@ -389,7 +407,19 @@ test.describe("Game Mechanics", () => {
     await page.goto("/");
     await page.click('button[data-testid="start-btn"]');
 
-    await page.waitForTimeout(100);
+    // Wait for game to start rendering
+    await page.waitForFunction(() => {
+      const canvas = document.getElementById("game-canvas") as HTMLCanvasElement;
+      const ctx = canvas.getContext("2d")!;
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      let nonBlackPixels = 0;
+      for (let i = 0; i < imageData.data.length; i += 4) {
+        if (imageData.data[i] !== 0 || imageData.data[i + 1] !== 0 || imageData.data[i + 2] !== 0) {
+          nonBlackPixels++;
+        }
+      }
+      return nonBlackPixels > 0;
+    });
 
     for (let i = 0; i < 50; i++) {
       await page.keyboard.press("ArrowRight");

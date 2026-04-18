@@ -135,6 +135,8 @@ function handleStart(): void {
     nextDirection = "right";
     lastMoveTime = performance.now();
     currentMoveInterval = MOVE_INTERVAL;
+    pulsePhase = 0;
+    scorePopups.length = 0;
 
     // Update UI
     gameControls.setState(gameState);
@@ -177,6 +179,15 @@ function handleRestart(): void {
  * Handle keyboard input
  */
 function handleKeyDown(e: KeyboardEvent): void {
+  // Skip game controls when focus is on an input element
+  if (
+    e.target instanceof HTMLInputElement ||
+    e.target instanceof HTMLTextAreaElement ||
+    e.target instanceof HTMLSelectElement
+  ) {
+    return;
+  }
+
   // Prevent default for game keys
   if (
     [
@@ -224,6 +235,7 @@ function handleKeyDown(e: KeyboardEvent): void {
       gameState = "menu";
       gameControls.setState(gameState);
       stopGameLoop();
+      scorePopups.length = 0;
       render();
     }
   }
