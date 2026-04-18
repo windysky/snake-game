@@ -411,6 +411,9 @@ function renderGame(): void {
   // Update animation phase
   pulsePhase += 0.15;
 
+  // Draw grid overlay for visual orientation
+  renderer.drawGrid(CELL_SIZE, "rgba(255,255,255,0.03)");
+
   // Draw snake
   renderer.drawSnake(snake.getSegments(), "#4ade80", CELL_SIZE);
 

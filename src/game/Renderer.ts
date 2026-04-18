@@ -64,36 +64,47 @@ export class Renderer {
   }
 
   /**
-   * Draw snake segments
+   * Draw snake segments with rounded corners and head eyes
    * REQ-GAME-004: Use integer coordinates
    * REQ-GAME-043: Batch draw operations
    */
   drawSnake(segments: Position[], color: string, cellSize = 20): void {
+    const radius = Math.max(1, cellSize * 0.2);
     for (let i = segments.length - 1; i >= 0; i--) {
       const x = Math.floor(segments[i].x);
       const y = Math.floor(segments[i].y);
+
+      this.ctx.beginPath();
+      this.ctx.roundRect(x + 0.5, y + 0.5, cellSize - 1, cellSize - 1, radius);
       this.ctx.fillStyle = i === 0 ? "#22c55e" : color;
-      this.ctx.fillRect(x, y, cellSize, cellSize);
+      this.ctx.fill();
+
+      if (i === 0) {
+        this.ctx.fillStyle = "#ffffff";
+        this.ctx.beginPath();
+        this.ctx.arc(x + cellSize * 0.35, y + cellSize * 0.4, 2, 0, Math.PI * 2);
+        this.ctx.arc(x + cellSize * 0.65, y + cellSize * 0.4, 2, 0, Math.PI * 2);
+        this.ctx.fill();
+      }
     }
   }
 
   /**
-   * Draw food
+   * Draw food as circle with pulse animation
    * REQ-GAME-004: Use integer coordinates
    */
   drawFood(position: Position, color: string, cellSize = 20, pulsePhase = 0): void {
     const x = Math.floor(position.x);
     const y = Math.floor(position.y);
     const scale = 1 + Math.sin(pulsePhase) * 0.15;
-    const offset = (cellSize * (1 - scale)) / 2;
+    const radius = (cellSize * scale) / 2;
+    const cx = x + cellSize / 2;
+    const cy = y + cellSize / 2;
 
+    this.ctx.beginPath();
+    this.ctx.arc(Math.floor(cx), Math.floor(cy), Math.max(1, Math.floor(radius)), 0, Math.PI * 2);
     this.ctx.fillStyle = color;
-    this.ctx.fillRect(
-      Math.floor(x + offset),
-      Math.floor(y + offset),
-      Math.floor(cellSize * scale),
-      Math.floor(cellSize * scale),
-    );
+    this.ctx.fill();
   }
 
   drawScorePopup(x: number, y: number, text: string, alpha: number): void {

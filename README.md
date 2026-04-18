@@ -19,11 +19,11 @@ A classic snake game built with TypeScript, featuring responsive design, sound e
 
 | Technology | Version | Purpose |
 |------------|---------|---------|
-| TypeScript | 5.8+ | Type-safe development |
+| TypeScript | 6.0+ | Type-safe development |
 | Bun | 1.3+ | Runtime, package manager, test runner |
-| Vite | 6.2+ | Build tool and dev server |
-| Biome | 1.9+ | Linting and formatting |
-| Playwright | 1.50+ | E2E testing |
+| Vite | 8.0+ | Build tool and dev server |
+| Biome | 2.4+ | Linting and formatting |
+| Playwright | 1.59+ | E2E testing |
 
 ## Installation
 
@@ -84,10 +84,10 @@ snake-game/
 
 ## Quality Metrics
 
-- **Tests**: 133 unit + 32 E2E passing
+- **Tests**: 134 unit + 37 E2E passing
 - **Lint**: Zero errors (Biome)
-- **Build**: 20.4 KB JS (6.2 KB gzipped)
-- **Offline**: Supported via service worker
+- **Build**: 19.58 KB JS (6.02 KB gzipped)
+- **Offline**: Supported via service worker (cache-first static assets)
 
 ## Browser Support
 

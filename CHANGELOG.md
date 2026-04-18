@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-04-17
+
+### Added
+
+- Subtle grid overlay on game canvas (3% opacity white lines) for visual orientation
+- Snake head eyes (two white dots) for better visual identity
+- 5 E2E game mechanic tests (canvas rendering, snake/food visibility, direction changes, wall collision, game over overlay)
+
+### Changed
+
+- Snake segments now use rounded corners (roundRect) instead of plain rectangles
+- Food rendered as circle instead of square, with smooth pulse animation
+- Service worker improved: cache-first for static assets (JS, CSS, images, fonts), network-first for HTML navigation
+- README.md version table updated to match actual dependency versions (TS 6.0, Vite 8.0, Biome 2.4, Playwright 1.59)
+
+### Removed
+
+- Deleted orphaned `bun.setup.ts` (bunfig.toml handles test configuration)
+
+### Fixed
+
+- Added `.moai/reports/` to `.gitignore`
+
 ## [1.2.0] - 2026-04-17
 
 ### Changed

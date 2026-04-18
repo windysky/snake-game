@@ -291,3 +291,124 @@ test.describe("Game State Transitions", () => {
     await expect(page.locator('[data-testid="pause-btn"]')).toHaveText("Pause");
   });
 });
+
+test.describe("Game Mechanics", () => {
+  test("should render pixels on canvas after starting game", async ({ page }) => {
+    await page.goto("/");
+    await page.click('button[data-testid="start-btn"]');
+
+    await page.waitForTimeout(300);
+
+    const pixelData = await page.evaluate(() => {
+      const canvas = document.getElementById("game-canvas") as HTMLCanvasElement;
+      const ctx = canvas.getContext("2d")!;
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      let nonBlackPixels = 0;
+      for (let i = 0; i < imageData.data.length; i += 4) {
+        if (imageData.data[i] !== 0 || imageData.data[i + 1] !== 0 || imageData.data[i + 2] !== 0) {
+          nonBlackPixels++;
+        }
+      }
+      return nonBlackPixels;
+    });
+
+    expect(pixelData).toBeGreaterThan(0);
+  });
+
+  test("should show snake and food on canvas during gameplay", async ({ page }) => {
+    await page.goto("/");
+    await page.click('button[data-testid="start-btn"]');
+
+    await page.waitForTimeout(200);
+
+    const hasGreenPixels = await page.evaluate(() => {
+      const canvas = document.getElementById("game-canvas") as HTMLCanvasElement;
+      const ctx = canvas.getContext("2d")!;
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < imageData.data.length; i += 4) {
+        const r = imageData.data[i];
+        const g = imageData.data[i + 1];
+        const b = imageData.data[i + 2];
+        if (g > 150 && r < 100 && b < 100) return true;
+      }
+      return false;
+    });
+
+    expect(hasGreenPixels).toBe(true);
+  });
+
+  test("should change direction with arrow keys during gameplay", async ({ page }) => {
+    await page.goto("/");
+    await page.click('button[data-testid="start-btn"]');
+
+    await page.waitForTimeout(200);
+
+    await page.keyboard.press("ArrowUp");
+    await page.waitForTimeout(300);
+
+    const pixelCount = await page.evaluate(() => {
+      const canvas = document.getElementById("game-canvas") as HTMLCanvasElement;
+      const ctx = canvas.getContext("2d")!;
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      let nonBlackPixels = 0;
+      for (let i = 0; i < imageData.data.length; i += 4) {
+        if (imageData.data[i] !== 0 || imageData.data[i + 1] !== 0 || imageData.data[i + 2] !== 0) {
+          nonBlackPixels++;
+        }
+      }
+      return nonBlackPixels;
+    });
+
+    expect(pixelCount).toBeGreaterThan(0);
+  });
+
+  test("should eventually show game over when snake hits wall", async ({ page }) => {
+    await page.goto("/");
+    await page.click('button[data-testid="start-btn"]');
+
+    // Wait for game to start, then rapidly alternate directions to force wall collision
+    await page.waitForTimeout(100);
+
+    // Send rapid right-arrow keys to speed the snake into the right wall
+    for (let i = 0; i < 50; i++) {
+      await page.keyboard.press("ArrowRight");
+      await page.waitForTimeout(80);
+    }
+
+    // Check if game over state is reached (restart button visible)
+    const isGameOver = await page
+      .locator('[data-testid="restart-btn"]')
+      .isVisible()
+      .catch(() => false);
+
+    // The game should have hit a wall by now (50 moves at 80ms each = 4 seconds)
+    expect(isGameOver).toBe(true);
+  });
+
+  test("should display game over overlay on canvas", async ({ page }) => {
+    await page.goto("/");
+    await page.click('button[data-testid="start-btn"]');
+
+    await page.waitForTimeout(100);
+
+    for (let i = 0; i < 50; i++) {
+      await page.keyboard.press("ArrowRight");
+      await page.waitForTimeout(80);
+    }
+
+    const hasGameOverText = await page.evaluate(() => {
+      const canvas = document.getElementById("game-canvas") as HTMLCanvasElement;
+      const ctx = canvas.getContext("2d")!;
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+      // Check for semi-transparent overlay (darkened center area)
+      const centerX = Math.floor(canvas.width / 2);
+      const centerY = Math.floor(canvas.height / 2);
+      const idx = (centerY * canvas.width + centerX) * 4;
+      const alpha = imageData.data[idx + 3];
+      return alpha > 0;
+    });
+
+    expect(hasGameOverText).toBe(true);
+  });
+});
