@@ -25,7 +25,7 @@ export class ScoreBoard {
 
   constructor(options: ScoreBoardOptions = {}, callbacks: ScoreBoardCallbacks = {}) {
     const containerId = options.containerId || "score-board";
-    this.storageKey = options.highScoreStorageKey || "snake-game-high-score";
+    this.storageKey = options.highScoreStorageKey || "snake_high_score";
     this.callbacks = callbacks;
 
     // Get or create the score board element

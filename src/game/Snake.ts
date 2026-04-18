@@ -171,15 +171,6 @@ export class Snake {
       return;
     }
 
-    // Process queued direction changes
-    if (this.directionQueue.length > 0) {
-      const newDir = this.directionQueue.shift();
-      if (newDir !== undefined) {
-        this.direction = newDir;
-      }
-    }
-
-    // Move snake
     this.move();
   }
 

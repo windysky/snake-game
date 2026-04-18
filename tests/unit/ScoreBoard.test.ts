@@ -101,7 +101,7 @@ describe("ScoreBoard", () => {
     });
 
     it("should load high score from localStorage", () => {
-      localStorage.setItem("snake-game-high-score", "150");
+      localStorage.setItem("snake_high_score", "150");
       scoreBoard = new ScoreBoard();
 
       expect(scoreBoard.getHighScore()).toBe(150);
@@ -122,7 +122,7 @@ describe("ScoreBoard", () => {
       scoreBoard = new ScoreBoard();
       scoreBoard.updateScore(300);
 
-      expect(localStorage.getItem("snake-game-high-score")).toBe("300");
+      expect(localStorage.getItem("snake_high_score")).toBe("300");
     });
 
     it("should use custom storage key if provided", () => {
