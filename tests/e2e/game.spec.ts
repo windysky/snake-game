@@ -387,20 +387,13 @@ test.describe("Game Mechanics", () => {
       return nonBlackPixels > 0;
     });
 
-    // Send rapid right-arrow keys to speed the snake into the right wall
+    // Press right to drive snake into wall - game over triggers after enough ticks
     for (let i = 0; i < 50; i++) {
       await page.keyboard.press("ArrowRight");
-      // Small delay to let the game process each move
-      await page.waitForTimeout(80);
     }
 
-    // Check if game over state is reached (restart button visible)
-    const isGameOver = await page
-      .locator('[data-testid="restart-btn"]')
-      .isVisible()
-      .catch(() => false);
-
-    expect(isGameOver).toBe(true);
+    // Wait for game over (restart button becomes visible)
+    await expect(page.locator('[data-testid="restart-btn"]')).toBeVisible({ timeout: 10000 });
   });
 
   test("should display game over overlay on canvas", async ({ page }) => {
@@ -423,8 +416,10 @@ test.describe("Game Mechanics", () => {
 
     for (let i = 0; i < 50; i++) {
       await page.keyboard.press("ArrowRight");
-      await page.waitForTimeout(80);
     }
+
+    // Wait for game over to trigger
+    await expect(page.locator('[data-testid="restart-btn"]')).toBeVisible({ timeout: 10000 });
 
     const hasGameOverText = await page.evaluate(() => {
       const canvas = document.getElementById("game-canvas") as HTMLCanvasElement;
