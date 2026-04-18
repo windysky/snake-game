@@ -69,11 +69,10 @@ export class Renderer {
    * REQ-GAME-043: Batch draw operations
    */
   drawSnake(segments: Position[], color: string, cellSize = 20): void {
-    this.ctx.fillStyle = color;
-
-    for (const segment of segments) {
-      const x = Math.floor(segment.x);
-      const y = Math.floor(segment.y);
+    for (let i = segments.length - 1; i >= 0; i--) {
+      const x = Math.floor(segments[i].x);
+      const y = Math.floor(segments[i].y);
+      this.ctx.fillStyle = i === 0 ? "#22c55e" : color;
       this.ctx.fillRect(x, y, cellSize, cellSize);
     }
   }
@@ -82,12 +81,31 @@ export class Renderer {
    * Draw food
    * REQ-GAME-004: Use integer coordinates
    */
-  drawFood(position: Position, color: string, cellSize = 20): void {
-    this.ctx.fillStyle = color;
-
+  drawFood(position: Position, color: string, cellSize = 20, pulsePhase = 0): void {
     const x = Math.floor(position.x);
     const y = Math.floor(position.y);
-    this.ctx.fillRect(x, y, cellSize, cellSize);
+    const scale = 1 + Math.sin(pulsePhase) * 0.15;
+    const offset = (cellSize * (1 - scale)) / 2;
+
+    this.ctx.fillStyle = color;
+    this.ctx.fillRect(
+      Math.floor(x + offset),
+      Math.floor(y + offset),
+      Math.floor(cellSize * scale),
+      Math.floor(cellSize * scale),
+    );
+  }
+
+  drawScorePopup(x: number, y: number, text: string, alpha: number): void {
+    if (alpha <= 0) return;
+    this.ctx.save();
+    this.ctx.globalAlpha = alpha;
+    this.ctx.fillStyle = "#fbbf24";
+    this.ctx.font = "bold 16px sans-serif";
+    this.ctx.textAlign = "center";
+    this.ctx.textBaseline = "middle";
+    this.ctx.fillText(text, Math.floor(x), Math.floor(y));
+    this.ctx.restore();
   }
 
   /**

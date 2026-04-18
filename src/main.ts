@@ -16,7 +16,9 @@ import { SoundControls } from "./ui/SoundControls.ts";
 const CELL_SIZE = 20;
 const CANVAS_WIDTH = 600;
 const CANVAS_HEIGHT = 600;
-const MOVE_INTERVAL = 150; // Snake moves every 150ms
+const MOVE_INTERVAL = 150; // Base snake speed (ms)
+const MIN_MOVE_INTERVAL = 60; // Fastest speed
+const SPEED_INCREASE_PER_FOOD = 2; // ms faster per food eaten
 
 // Global game state
 let snake: Snake;
@@ -31,6 +33,9 @@ let gameState: "menu" | "playing" | "paused" | "game_over" = "menu";
 let score = 0;
 let highScore = 0;
 let lastMoveTime = 0;
+let currentMoveInterval = MOVE_INTERVAL;
+let pulsePhase = 0;
+const scorePopups: Array<{ x: number; y: number; text: string; alpha: number }> = [];
 let animationFrameId: number | null = null;
 
 // Keyboard input
@@ -98,6 +103,9 @@ function init(): void {
   // Set up keyboard input for direction
   document.addEventListener("keydown", handleKeyDown);
 
+  // Set up touch/swipe input for mobile
+  setupTouchControls(canvas);
+
   // Initial render
   render();
 
@@ -121,6 +129,7 @@ function handleStart(): void {
     currentDirection = "right";
     nextDirection = "right";
     lastMoveTime = performance.now();
+    currentMoveInterval = MOVE_INTERVAL;
 
     // Update UI
     gameControls.setState(gameState);
@@ -284,8 +293,7 @@ function update(deltaTime: number): void {
 
   lastMoveTime += deltaTime;
 
-  // Move snake at fixed interval
-  if (lastMoveTime >= MOVE_INTERVAL) {
+  if (lastMoveTime >= currentMoveInterval) {
     lastMoveTime = 0;
 
     // Update direction
@@ -314,6 +322,15 @@ function update(deltaTime: number): void {
 
       // Relocate food
       food.relocate(snake.getSegments());
+
+      // Increase speed
+      currentMoveInterval = Math.max(
+        MIN_MOVE_INTERVAL,
+        currentMoveInterval - SPEED_INCREASE_PER_FOOD,
+      );
+
+      // Score popup
+      scorePopups.push({ x: head.x, y: head.y, text: "+10", alpha: 1.0 });
 
       // Update high score
       if (score > highScore) {
@@ -386,14 +403,29 @@ function renderMenu(): void {
  * Render game elements
  */
 function renderGame(): void {
+  // Update animation phase
+  pulsePhase += 0.15;
+
   // Draw snake
   renderer.drawSnake(snake.getSegments(), "#4ade80", CELL_SIZE);
 
-  // Draw food
-  renderer.drawFood(food.getPosition(), "#f87171", CELL_SIZE);
+  // Draw food with pulse
+  renderer.drawFood(food.getPosition(), "#f87171", CELL_SIZE, pulsePhase);
 
-  // Draw grid (optional)
-  // renderer.drawGrid(CANVAS_WIDTH, CANVAS_HEIGHT, CELL_SIZE, "#374151");
+  // Draw score popups
+  for (let i = scorePopups.length - 1; i >= 0; i--) {
+    const popup = scorePopups[i];
+    renderer.drawScorePopup(
+      popup.x + CELL_SIZE / 2,
+      popup.y - (1 - popup.alpha) * 30,
+      popup.text,
+      popup.alpha,
+    );
+    popup.alpha -= 0.03;
+    if (popup.alpha <= 0) {
+      scorePopups.splice(i, 1);
+    }
+  }
 
   // Draw pause overlay
   if (gameState === "paused") {
@@ -423,6 +455,67 @@ function renderGameOver(): void {
   }
 
   renderer.drawText("Press Restart or R to Play Again", centerX, centerY + 90, "#9ca3af", 16);
+}
+
+// Touch input state
+let touchStartX = 0;
+let touchStartY = 0;
+const MIN_SWIPE_DISTANCE = 30;
+
+function setupTouchControls(canvas: HTMLCanvasElement): void {
+  canvas.style.touchAction = "none";
+
+  canvas.addEventListener(
+    "touchstart",
+    (e: TouchEvent) => {
+      e.preventDefault();
+      const touch = e.touches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+
+      // Tap to start/restart
+      if (gameState === "menu" || gameState === "game_over") {
+        handleStart();
+      }
+    },
+    { passive: false },
+  );
+
+  canvas.addEventListener(
+    "touchmove",
+    (e: TouchEvent) => {
+      e.preventDefault();
+    },
+    { passive: false },
+  );
+
+  canvas.addEventListener(
+    "touchend",
+    (e: TouchEvent) => {
+      e.preventDefault();
+      if (e.changedTouches.length === 0) return;
+
+      const touch = e.changedTouches[0];
+      const deltaX = touch.clientX - touchStartX;
+      const deltaY = touch.clientY - touchStartY;
+      const absDeltaX = Math.abs(deltaX);
+      const absDeltaY = Math.abs(deltaY);
+
+      if (Math.max(absDeltaX, absDeltaY) < MIN_SWIPE_DISTANCE) return;
+
+      let newDirection: Direction;
+      if (absDeltaX > absDeltaY) {
+        newDirection = deltaX > 0 ? "right" : "left";
+      } else {
+        newDirection = deltaY > 0 ? "down" : "up";
+      }
+
+      if (gameState === "playing" && !isOppositeDirection(currentDirection, newDirection)) {
+        nextDirection = newDirection;
+      }
+    },
+    { passive: false },
+  );
 }
 
 // Start the application when DOM is ready
