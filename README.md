@@ -1,15 +1,17 @@
 # Snake Game
 
-A classic snake game built with TypeScript, featuring responsive design, sound effects, and local score persistence.
+A classic snake game built with TypeScript, featuring responsive design, sound effects, touch controls, and local score persistence.
 
 ## Features
 
 - **Classic Snake Gameplay**: Navigate the snake to eat food and grow longer
+- **Progressive Difficulty**: Speed increases as you score more points
+- **Touch Controls**: Swipe to change direction on mobile devices
 - **Score System**: Track current score and high score with persistent storage
 - **Sound Effects**: Procedurally generated audio using Web Audio API
 - **Responsive Design**: Mobile-first layout that works on all screen sizes
-- **Keyboard Controls**: Arrow keys for direction, Space for pause, R for restart, Esc for menu
-- **Accessibility**: ARIA labels and keyboard navigation support
+- **Visual Polish**: Pulsing food, differentiated snake head, score popups
+- **Keyboard Controls**: Arrow keys/WASD for direction, Space for pause, R for restart
 
 ## Technology Stack
 
@@ -24,88 +26,66 @@ A classic snake game built with TypeScript, featuring responsive design, sound e
 ## Installation
 
 ```bash
-# Install dependencies
 bun install
 ```
 
 ## Development
 
 ```bash
-# Start dev server
-bun run dev
-
-# Run tests
-bun test
-
-# Run E2E tests
-bun run test:e2e
-
-# Lint code
-bun run lint
-
-# Fix lint issues
-bun run lint:fix
-```
-
-## Build
-
-```bash
-# Create production bundle
-bun run build
-
-# Preview production build
-bun run preview
+bun run dev          # Start dev server
+bun test             # Run unit tests
+bun run test:e2e     # Run E2E tests
+bun run lint         # Lint code
+bun run lint:fix     # Fix lint issues
+bun run build        # Production build
+bun run preview      # Preview production build
 ```
 
 ## Game Controls
 
-| Key | Action |
-|-----|--------|
-| Arrow Keys | Change direction |
-| Space | Pause/Resume |
-| R | Restart game |
+| Input | Action |
+|-------|--------|
+| Arrow Keys / WASD | Change direction |
+| Swipe (mobile) | Change direction |
+| Tap canvas (mobile) | Start / Restart |
+| Space | Pause / Resume |
+| R | Restart |
 | Esc | Return to menu |
 
 ## Project Structure
 
 ```
 snake-game/
-├── public/
-│   └── index.html          # Main HTML file
 ├── src/
 │   ├── game/               # Core game engine
-│   │   ├── Game.ts         # Game state machine and loop
-│   │   ├── Snake.ts        # Snake entity
-│   │   ├── Food.ts         # Food system
-│   │   └── Renderer.ts     # Canvas 2D rendering
-│   ├── audio/              # Audio system
-│   │   └── SoundManager.ts # Sound playback
-│   ├── storage/            # Persistence layer
-│   │   └── ScoreStorage.ts # Score storage
-│   ├── ui/                 # UI components
-│   │   ├── ScoreBoard.ts   # Score display
-│   │   ├── GameControls.ts # Game buttons
-│   │   └── SoundControls.ts# Sound controls
-│   ├── main.ts             # Entry point
-│   └── styles.css          # Responsive styles
+│   │   ├── Snake.ts         # Snake entity with direction queue
+│   │   ├── Food.ts          # Food system with rejection sampling
+│   │   └── Renderer.ts      # Canvas 2D rendering with visual effects
+│   ├── audio/
+│   │   └── SoundManager.ts  # Procedural sound via Web Audio API
+│   ├── storage/
+│   │   └── ScoreStorage.ts  # Score persistence with memory fallback
+│   ├── ui/
+│   │   ├── ScoreBoard.ts    # Score display component
+│   │   ├── GameControls.ts  # Game button controls
+│   │   └── SoundControls.ts # Volume/mute controls
+│   ├── main.ts              # Entry point and game loop
+│   └── styles.css           # Responsive styles
 ├── tests/
-│   ├── unit/               # Unit tests (Bun Test)
-│   └── e2e/                # E2E tests (Playwright)
-└── dist/                   # Production build output
+│   ├── unit/                # Unit tests (Bun Test)
+│   └── e2e/                 # E2E tests (Playwright)
+└── dist/                    # Production build output
 ```
 
 ## Quality Metrics
 
-- **Test Coverage**: 87.36% (target: 85%)
-- **Tests**: 151 passing
-- **Bundle Size**: 16.7 KB (4.9 KB gzipped)
+- **Tests**: 133 passing
+- **Lint**: Zero errors (Biome)
+- **Build**: 20.3 KB JS (6.1 KB gzipped)
 
 ## Browser Support
 
-- Chrome 90+
-- Firefox 88+
-- Safari 14+
-- Edge 90+
+Chrome 90+, Firefox 88+, Safari 14+, Edge 90+
 
 ## License
 
