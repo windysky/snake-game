@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Classic snake game with TypeScript" />
+    <title>Snake Game</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header>
+        <h1>🐍 Snake Game</h1>
+      </header>
+
+      <!-- Score Board -->
+      <div id="score-board" data-role="scoreboard" aria-live="polite">
+        <div class="score-display">
+          <span class="score-label">Score</span>
+          <span data-testid="current-score">0</span>
+        </div>
+        <div class="score-display">
+          <span class="score-label">High Score</span>
+          <span data-testid="high-score">0</span>
+        </div>
+      </div>
+
+      <!-- Game Canvas -->
+      <div id="game-container">
+        <canvas id="game-canvas" width="600" height="600"></canvas>
+
+        <!-- Game Over Overlay -->
+        <div id="game-over-overlay" aria-hidden="true">
+          <h2>Game Over!</h2>
+          <p>Final Score: <span id="final-score">0</span></p>
+          <button id="overlay-restart-btn" aria-label="Restart game">Play Again</button>
+        </div>
+      </div>
+
+      <!-- Game Controls -->
+      <div id="game-controls" data-role="game-controls">
+        <button id="btn-start" data-testid="start-btn" aria-label="Start game">
+          Start
+        </button>
+        <button
+          id="btn-pause"
+          data-testid="pause-btn"
+          aria-label="Pause game"
+          style="display: none"
+        >
+          Pause
+        </button>
+        <button
+          id="btn-restart"
+          data-testid="restart-btn"
+          aria-label="Restart game"
+          style="display: none"
+        >
+          Restart
+        </button>
+      </div>
+
+      <!-- Sound Controls -->
+      <div id="sound-controls" data-role="sound-controls">
+        <button
+          id="btn-mute"
+          data-testid="mute-btn"
+          aria-label="Mute sound"
+          type="button"
+        >
+          <span data-testid="mute-icon">🔊</span>
+        </button>
+        <input
+          id="volume-slider"
+          data-testid="volume-slider"
+          type="range"
+          min="0"
+          max="100"
+          value="50"
+          aria-label="Volume control"
+        />
+      </div>
+
+      <!-- Instructions -->
+      <footer>
+        <p style="text-align: center; color: var(--color-text-muted); font-size: var(--font-size-sm)">
+          Use Arrow Keys or WASD to move • Space to pause • R to restart
+        </p>
+      </footer>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
