@@ -10,7 +10,7 @@ A classic snake game built with TypeScript, featuring responsive design, sound e
 - **Score System**: Track current score and high score with persistent storage
 - **Sound Effects**: Procedurally generated audio using Web Audio API
 - **Responsive Design**: Mobile-first layout that works on all screen sizes
-- **Visual Polish**: Pulsing food, differentiated snake head, score popups
+- **Visual Polish**: Pulsing food, differentiated snake head, score popups, particle effects, screen shake
 - **Keyboard Controls**: Arrow keys/WASD for direction, Space for pause, R to restart
 - **Offline Support**: Installable PWA with service worker caching
 - **Accessible**: ARIA labels, skip navigation, screen reader support
@@ -86,7 +86,7 @@ snake-game/
 
 - **Tests**: 134 unit + 37 E2E passing
 - **Lint**: Zero errors (Biome)
-- **Build**: 19.58 KB JS (6.02 KB gzipped)
+- **Build**: 20.72 KB JS (6.41 KB gzipped)
 - **Offline**: Supported via service worker (cache-first static assets)
 
 ## Browser Support
