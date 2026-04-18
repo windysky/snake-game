@@ -11,8 +11,10 @@
       "node_modules",
       "dist",
       ".moai",
-      "playwright-report",
-      ".claude/skills/**/templates/**"
+      ".claude",
+      ".agency",
+      ".moai-backups",
+      "playwright-report"
     ]
   },
   "formatter": {
