@@ -5,13 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.3.0] - 2026-04-17
+## [1.3.0] - 2026-04-18
 
 ### Added
 
 - Subtle grid overlay on game canvas (3% opacity white lines) for visual orientation
 - Snake head eyes (two white dots) for better visual identity
 - 5 E2E game mechanic tests (canvas rendering, snake/food visibility, direction changes, wall collision, game over overlay)
+- Gold particle burst effect on food consumption (8 particles)
+- Screen shake effect on game over (6px intensity, 400ms duration)
+- Score popup animation with frame-rate-independent alpha decay
 
 ### Changed
 
@@ -19,14 +22,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Food rendered as circle instead of square, with smooth pulse animation
 - Service worker improved: cache-first for static assets (JS, CSS, images, fonts), network-first for HTML navigation
 - README.md version table updated to match actual dependency versions (TS 6.0, Vite 8.0, Biome 2.4, Playwright 1.59)
+- Canvas role changed from "img" to "application" for better accessibility
+- Service worker cache bumped to snake-game-v3
 
 ### Removed
 
 - Deleted orphaned `bun.setup.ts` (bunfig.toml handles test configuration)
+- Removed deprecated `Food.eat()` method (use `relocate()` instead)
+- Removed stale `@ts-expect-error` directive in SoundManager test
 
 ### Fixed
 
 - Added `.moai/reports/` to `.gitignore`
+- Direction reversal bypass with rapid key presses now checks against queued direction
+- Duplicate score history entries eliminated (score saved exactly once on game over)
+- AudioContext suspended state now triggers resume() in playSound()
+- E2E tests updated from waitForTimeout to web-first assertions
+- Canvas roundRect() now has arcTo()-based fallback for older browsers
+- Game auto-pauses when browser tab is hidden (Visibility API)
+- Added prefers-color-scheme: light theme support (blue/red palette)
 
 ## [1.2.0] - 2026-04-17
 
@@ -131,6 +145,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 151 unit tests (87.36% coverage)
 - 6 Playwright E2E tests
 
+[1.3.0]: https://github.com/jungukhur/snake-game/compare/v1.2.0...v1.3.0
 [1.1.0]: https://github.com/jungukhur/snake-game/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/jungukhur/snake-game/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/jungukhur/snake-game/compare/v1.0.0...v1.0.1

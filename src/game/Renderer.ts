@@ -84,7 +84,7 @@ export class Renderer {
       const y = Math.floor(segments[i].y);
 
       this.ctx.beginPath();
-      this.ctx.roundRect(x + 0.5, y + 0.5, cellSize - 1, cellSize - 1, radius);
+      this.roundRect(x + 0.5, y + 0.5, cellSize - 1, cellSize - 1, radius);
       this.ctx.fillStyle = i === 0 ? "#22c55e" : color;
       this.ctx.fill();
 
@@ -189,6 +189,20 @@ export class Renderer {
     this.ctx.fillStyle = color;
     this.ctx.fillRect(Math.floor(x), Math.floor(y), width, height);
     this.ctx.restore();
+  }
+
+  private roundRect(x: number, y: number, w: number, h: number, r: number): void {
+    if (typeof this.ctx.roundRect === "function") {
+      this.ctx.roundRect(x, y, w, h, r);
+      return;
+    }
+    const clamp = Math.min(r, w / 2, h / 2);
+    this.ctx.moveTo(x + clamp, y);
+    this.ctx.arcTo(x + w, y, x + w, y + h, clamp);
+    this.ctx.arcTo(x + w, y + h, x, y + h, clamp);
+    this.ctx.arcTo(x, y + h, x, y, clamp);
+    this.ctx.arcTo(x, y, x + w, y, clamp);
+    this.ctx.closePath();
   }
 
   spawnParticles(x: number, y: number, color: string, count = 8): void {

@@ -12,8 +12,10 @@ A classic snake game built with TypeScript, featuring responsive design, sound e
 - **Responsive Design**: Mobile-first layout that works on all screen sizes
 - **Visual Polish**: Pulsing food, differentiated snake head, score popups, particle effects, screen shake
 - **Keyboard Controls**: Arrow keys/WASD for direction, Space for pause, R to restart
+- **Auto-Pause**: Game pauses automatically when you switch browser tabs
 - **Offline Support**: Installable PWA with service worker caching
 - **Accessible**: ARIA labels, skip navigation, screen reader support
+- **Dual Theme**: Automatic dark/light theme via prefers-color-scheme
 
 ## Technology Stack
 
@@ -74,7 +76,7 @@ snake-game/
 │   │   ├── ScoreBoard.ts    # Score display component
 │   │   ├── GameControls.ts  # Game button controls
 │   │   └── SoundControls.ts # Volume/mute controls
-│   ├── main.ts              # Entry point and game loop
+│   ├── main.ts              # Entry point, game loop, visibility API
 │   └── styles.css           # Responsive styles
 ├── tests/
 │   ├── unit/                # Unit tests (Bun Test)
@@ -86,8 +88,10 @@ snake-game/
 
 - **Tests**: 134 unit + 37 E2E passing
 - **Lint**: Zero errors (Biome)
-- **Build**: 20.72 KB JS (6.41 KB gzipped)
+- **Build**: 21.09 KB JS (6.52 KB gzipped)
 - **Offline**: Supported via service worker (cache-first static assets)
+- **Themes**: Automatic dark/light mode via prefers-color-scheme
+- **Compatibility**: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+ (roundRect fallback included)
 
 ## Browser Support
 

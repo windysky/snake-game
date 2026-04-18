@@ -116,6 +116,13 @@ function init(): void {
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("/sw.js").catch(() => {});
   }
+
+  // Auto-pause when tab loses visibility
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden && gameState === "playing") {
+      handlePause();
+    }
+  });
 }
 
 /**
