@@ -27,7 +27,8 @@ export class SoundManager {
   initialize(): boolean {
     // Check for Web Audio API support (REQ-INF-020)
     const AudioContextConstructor: AudioContextType | undefined =
-      window.AudioContext || (window as any).webkitAudioContext;
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext?: AudioContextType }).webkitAudioContext;
 
     if (!AudioContextConstructor) {
       console.warn("Web Audio API not supported");

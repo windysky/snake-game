@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-04-17
+
+### Added
+
+- PWA manifest and service worker for offline support
+- Favicon (inline SVG snake emoji)
+- Meta theme-color and Open Graph tags
+- Accessibility skip-to-controls link
+- Canvas ARIA attributes (role, aria-label, tabindex)
+- Comprehensive E2E test suite (32 tests covering all workflows)
+- Keyboard input tests (Arrow, WASD, Space, Escape, R)
+- Responsive layout tests (desktop, tablet, mobile)
+- Accessibility tests (ARIA labels, aria-live)
+- Game state transition lifecycle tests
+
+### Fixed
+
+- Restart from paused state now works (handleStart guard extended to "paused" state)
+- Removed dead CSS for game-over overlay HTML that was removed in v1.1.0
+- Removed stale `publicDir: "public"` from vite.config.ts
+- Fixed SoundManager `as any` type cast to typed cast
+- Added test-results/ and playwright-report/ to .gitignore
+
+### Changed
+
+- package.json version synced to 1.1.0 (was 1.0.0)
+- E2E test suite expanded from 6 to 32 tests
+- Build output: 20.39 KB JS (6.17 KB gzipped)
+
 ## [1.1.0] - 2026-04-17
 
 ### Added

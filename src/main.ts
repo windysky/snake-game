@@ -111,13 +111,18 @@ function init(): void {
 
   console.log("Snake Game initialized!");
   console.log("Controls: Arrow Keys/WASD to move, Space to pause, R to restart");
+
+  // Register service worker for offline support
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/sw.js").catch(() => {});
+  }
 }
 
 /**
  * Handle start button click
  */
 function handleStart(): void {
-  if (gameState === "menu" || gameState === "game_over") {
+  if (gameState === "menu" || gameState === "game_over" || gameState === "paused") {
     gameState = "playing";
     score = 0;
     scoreBoard.updateScore(0);

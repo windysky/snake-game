@@ -310,35 +310,3 @@ input[type="range"]:focus-visible {
   white-space: nowrap;
   border: 0;
 }
-
-/* Game over overlay */
-#game-over-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-md);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity var(--transition-normal);
-}
-
-#game-over-overlay.visible {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-#game-over-overlay h2 {
-  font-size: var(--font-size-xl);
-  color: var(--color-accent);
-}
-
-#game-over-overlay p {
-  font-size: var(--font-size-lg);
-}

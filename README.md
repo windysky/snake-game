@@ -1,6 +1,6 @@
 # Snake Game
 
-A classic snake game built with TypeScript, featuring responsive design, sound effects, touch controls, and local score persistence.
+A classic snake game built with TypeScript, featuring responsive design, sound effects, touch controls, offline support, and local score persistence.
 
 ## Features
 
@@ -11,7 +11,9 @@ A classic snake game built with TypeScript, featuring responsive design, sound e
 - **Sound Effects**: Procedurally generated audio using Web Audio API
 - **Responsive Design**: Mobile-first layout that works on all screen sizes
 - **Visual Polish**: Pulsing food, differentiated snake head, score popups
-- **Keyboard Controls**: Arrow keys/WASD for direction, Space for pause, R for restart
+- **Keyboard Controls**: Arrow keys/WASD for direction, Space for pause, R to restart
+- **Offline Support**: Installable PWA with service worker caching
+- **Accessible**: ARIA labels, skip navigation, screen reader support
 
 ## Technology Stack
 
@@ -56,6 +58,9 @@ bun run preview      # Preview production build
 
 ```
 snake-game/
+├── public/
+│   ├── manifest.json       # PWA manifest
+│   └── sw.js               # Service worker
 ├── src/
 │   ├── game/               # Core game engine
 │   │   ├── Snake.ts         # Snake entity with direction queue
@@ -79,9 +84,10 @@ snake-game/
 
 ## Quality Metrics
 
-- **Tests**: 133 passing
+- **Tests**: 133 unit + 32 E2E passing
 - **Lint**: Zero errors (Biome)
-- **Build**: 20.3 KB JS (6.1 KB gzipped)
+- **Build**: 20.4 KB JS (6.2 KB gzipped)
+- **Offline**: Supported via service worker
 
 ## Browser Support
 
