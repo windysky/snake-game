@@ -88,6 +88,8 @@ export class SoundControls {
   private setVolume(volume: number): void {
     this.volume = volume;
     this.volumeSlider.value = volume.toString();
+    this.volumeSlider.setAttribute("aria-valuenow", volume.toString());
+    this.volumeSlider.setAttribute("aria-valuetext", `${volume}%`);
 
     // Update mute state based on volume
     if (volume === 0 && !this.isMuted) {

@@ -207,7 +207,7 @@ export class Renderer {
   }
 
   spawnParticles(x: number, y: number, color: string, count = 8): void {
-    if (this.particles.length >= this.MAX_PARTICLES) return;
+    if (this.particles.length + count > this.MAX_PARTICLES) return;
     for (let i = 0; i < count; i++) {
       const angle = (Math.PI * 2 * i) / count + Math.random() * 0.5;
       const speed = 1 + Math.random() * 2;

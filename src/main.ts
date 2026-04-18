@@ -383,6 +383,10 @@ function handleGameOver(): void {
   scoreBoard.updateScore(score);
 
   render();
+
+  // Move focus to restart button for keyboard users
+  const restartBtn = document.getElementById("btn-restart");
+  if (restartBtn) restartBtn.focus();
 }
 
 /**
