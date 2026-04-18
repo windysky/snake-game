@@ -207,7 +207,7 @@ describe("SoundControls", () => {
           onVolumeChange: (volume) => {
             volumeChanged = volume;
           },
-          onMuteToggle: (muted) => {
+          onMuteToggle: (_muted) => {
             muteToggled = true;
           },
         },
@@ -230,7 +230,7 @@ describe("SoundControls", () => {
           onVolumeChange: (volume) => {
             volumeChanged = volume;
           },
-          onMuteToggle: (muted) => {
+          onMuteToggle: (_muted) => {
             muteToggled = true;
           },
         },

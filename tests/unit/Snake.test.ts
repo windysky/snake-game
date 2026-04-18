@@ -1,7 +1,7 @@
 // @MX:NOTE: Snake entity tests - verifies movement, growth, and collision detection
 // @MX:SPEC: SPEC-GAME-001
 
-import { afterEach, beforeEach, describe, expect, test } from "bun:test";
+import { beforeEach, describe, expect, test } from "bun:test";
 import { Snake } from "../../src/game/Snake";
 
 describe("Snake", () => {

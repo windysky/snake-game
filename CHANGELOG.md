@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.2.0] - 2026-04-17
 
+### Changed
+
+- Updated Biome from 1.9.4 to 2.4.12 (migrated config format)
+- Updated Vite from 6.2.3 to 8.0.8
+- Updated TypeScript from 5.8 to 6.0
+- Updated Playwright from 1.50 to 1.59
+- Pinned happy-dom to 17.x (20.x has querySelector bug with Bun)
+- Added explicit type="button" to all HTML buttons
+- Added bunfig.toml to exclude E2E tests from Bun test runner
+- Removed unused ScoreEntry interface from test file
+- Fixed unused variable warnings for dev dependency updates
+- Version synced from 1.1.0 to 1.2.0
+
 ### Added
 
 - PWA manifest and service worker for offline support

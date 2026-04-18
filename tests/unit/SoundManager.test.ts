@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, mock, test } from "bun:test";
+import { beforeEach, describe, expect, test } from "bun:test";
 import { SoundManager } from "../../src/audio/SoundManager";
 
 // Mock Web Audio API for testing
@@ -50,7 +50,7 @@ describe("SoundManager", () => {
       // Save original
       const originalWindow = globalThis.window;
 
-      // @ts-ignore - intentionally removing AudioContext from window
+      // @ts-expect-error - intentionally removing AudioContext from window
       (globalThis.window as any).AudioContext = undefined;
 
       const manager = new SoundManager();

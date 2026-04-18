@@ -6,7 +6,7 @@
 import { SoundManager } from "./audio/SoundManager.ts";
 import { Food } from "./game/Food.ts";
 import { Renderer } from "./game/Renderer.ts";
-import { type Direction, Snake, isOppositeDirection } from "./game/Snake.ts";
+import { type Direction, isOppositeDirection, Snake } from "./game/Snake.ts";
 import { ScoreStorage } from "./storage/ScoreStorage.ts";
 import { GameControls } from "./ui/GameControls.ts";
 import { ScoreBoard } from "./ui/ScoreBoard.ts";
@@ -26,7 +26,7 @@ let food: Food;
 let renderer: Renderer;
 let scoreBoard: ScoreBoard;
 let gameControls: GameControls;
-let soundControls: SoundControls;
+let _soundControls: SoundControls;
 let soundManager: SoundManager;
 let scoreStorage: ScoreStorage;
 let gameState: "menu" | "playing" | "paused" | "game_over" = "menu";
@@ -88,7 +88,7 @@ function init(): void {
   soundManager = new SoundManager();
   soundManager.initialize();
 
-  soundControls = new SoundControls(
+  _soundControls = new SoundControls(
     { defaultVolume: 50 },
     {
       onVolumeChange: (volume) => {

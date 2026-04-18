@@ -110,7 +110,7 @@ export class ScoreStorage {
 
     try {
       return localStorage.getItem(key);
-    } catch (e) {
+    } catch (_e) {
       // Private browsing mode or localStorage unavailable
       return null;
     }

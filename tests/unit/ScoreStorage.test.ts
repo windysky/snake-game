@@ -1,11 +1,6 @@
 import { beforeEach, describe, expect, test } from "bun:test";
 import { ScoreStorage } from "../../src/storage/ScoreStorage";
 
-interface ScoreEntry {
-  score: number;
-  timestamp: number;
-}
-
 // Mock localStorage for Bun test environment
 class MockStorage implements Storage {
   private store: Map<string, string> = new Map();
@@ -131,7 +126,7 @@ describe("ScoreStorage", () => {
       const originalLocalStorage = globalThis.localStorage;
 
       // Remove localStorage to test memory fallback
-      // @ts-ignore - intentionally removing localStorage
+      // @ts-expect-error - intentionally removing localStorage
       globalThis.localStorage = undefined;
 
       const fallbackStorage = new ScoreStorage();
