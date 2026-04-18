@@ -20,6 +20,7 @@ import type { Position } from "./Snake.ts";
 export class Renderer {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
+  private readonly MAX_PARTICLES = 200;
   private particles: Array<{
     x: number;
     y: number;
@@ -206,6 +207,7 @@ export class Renderer {
   }
 
   spawnParticles(x: number, y: number, color: string, count = 8): void {
+    if (this.particles.length >= this.MAX_PARTICLES) return;
     for (let i = 0; i < count; i++) {
       const angle = (Math.PI * 2 * i) / count + Math.random() * 0.5;
       const speed = 1 + Math.random() * 2;
@@ -243,6 +245,7 @@ export class Renderer {
   }
 
   shake(intensity = 4, duration = 300): void {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const canvas = this.canvas;
     const start = performance.now();
     const shake = () => {

@@ -281,8 +281,9 @@ function startGameLoop(): void {
   let lastTime = performance.now();
 
   const gameLoop = (timestamp: number) => {
-    const deltaTime = timestamp - lastTime;
+    const rawDelta = timestamp - lastTime;
     lastTime = timestamp;
+    const deltaTime = Math.min(rawDelta, 100);
 
     update(deltaTime);
     render(deltaTime);
@@ -377,10 +378,9 @@ function handleGameOver(): void {
   renderer.shake(6, 400);
 
   // Save final score (updates high score and adds to history)
-  if (score > highScore) {
-    highScore = score;
-  }
+  highScore = Math.max(score, highScore);
   scoreStorage.saveScore(score);
+  scoreBoard.updateScore(score);
 
   render();
 }

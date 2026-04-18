@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'self'" />
     <meta name="description" content="Classic snake game with TypeScript, touch controls, and progressive difficulty" />
     <meta name="theme-color" content="#1a1a2e" />
     <meta property="og:title" content="Snake Game" />
@@ -15,7 +16,7 @@
   </head>
   <body>
     <div id="app">
-      <a href="#game-controls" class="visually-hidden" style="position:absolute;top:0;left:0;z-index:100;background:#000;color:#fff;padding:8px 16px;" onfocus="this.style.position='static'" onblur="this.style.position='absolute'">Skip to controls</a>
+      <a href="#game-controls" class="skip-link visually-hidden">Skip to controls</a>
       <header>
         <h1>🐍 Snake Game</h1>
       </header>

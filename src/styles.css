@@ -48,7 +48,7 @@
     --color-primary: #3b82f6;
     --color-accent: #ef4444;
     --color-text: #1a1a2e;
-    --color-text-muted: #6b7280;
+    --color-text-muted: #4b5563;
     --color-border: #d1d5db;
   }
 }
@@ -312,6 +312,21 @@ input[type="range"]:focus-visible {
   #app {
     max-width: 800px;
   }
+}
+
+/* Skip link */
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  background: #000;
+  color: #fff;
+  padding: 8px 16px;
+}
+
+.skip-link:focus {
+  position: static;
 }
 
 /* Utility classes */

@@ -41,6 +41,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Canvas roundRect() now has arcTo()-based fallback for older browsers
 - Game auto-pauses when browser tab is hidden (Visibility API)
 - Added prefers-color-scheme: light theme support (blue/red palette)
+- Service worker fetch handler now validates same-origin requests
+- Added Content Security Policy meta tag
+- Refactored skip link from inline styles to CSS class
+- DeltaTime capped at 100ms to prevent physics glitch after tab inactivity
+- Particle system limited to 200 max particles
+- Screen shake respects prefers-reduced-motion media query
+- Light mode muted text color darkened for WCAG AA contrast compliance
+- High score sync fixed between main.ts and ScoreBoard
 
 ## [1.2.0] - 2026-04-17
 
