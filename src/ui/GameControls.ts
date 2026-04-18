@@ -23,7 +23,6 @@ export class GameControls {
   private readonly restartBtn: HTMLButtonElement;
   private currentState: GameState;
   private callbacks: GameControlsCallbacks;
-  private keyboardHandler: (e: KeyboardEvent) => void;
 
   constructor(options: GameControlsOptions = {}, callbacks: GameControlsCallbacks = {}) {
     const containerId = options.containerId || "game-controls";
@@ -46,10 +45,6 @@ export class GameControls {
 
     // Set up event listeners
     this.setupEventListeners();
-
-    // Set up keyboard shortcuts
-    this.keyboardHandler = this.handleKeyboard.bind(this);
-    document.addEventListener("keydown", this.keyboardHandler);
   }
 
   private createDefaultElement(id: string): HTMLElement {
@@ -80,30 +75,6 @@ export class GameControls {
     this.restartBtn.addEventListener("click", () => {
       this.callbacks.onRestart?.();
     });
-  }
-
-  private handleKeyboard(e: KeyboardEvent): void {
-    // Space key - Pause/Resume
-    if (e.code === "Space") {
-      if (this.currentState === "playing") {
-        this.callbacks.onPause?.();
-      } else if (this.currentState === "paused") {
-        this.callbacks.onResume?.();
-      }
-    }
-    // R key - Restart
-    else if (e.code === "KeyR") {
-      if (this.currentState === "game_over" || this.currentState === "paused") {
-        this.callbacks.onRestart?.();
-      }
-    }
-    // Escape key - Menu
-    else if (e.code === "Escape") {
-      if (this.currentState === "playing" || this.currentState === "paused") {
-        this.currentState = "menu";
-        this.updateUI();
-      }
-    }
   }
 
   private updateUI(): void {
@@ -145,6 +116,6 @@ export class GameControls {
   }
 
   destroy(): void {
-    document.removeEventListener("keydown", this.keyboardHandler);
+    // No-op: kept for API compatibility
   }
 }
