@@ -207,8 +207,8 @@ function handleKeyDown(e: KeyboardEvent): void {
 
   const newDirection = getDirectionFromKey(e.code);
   if (newDirection && gameState === "playing") {
-    // Prevent 180-degree turns
-    if (!isOppositeDirection(currentDirection, newDirection)) {
+    // Prevent 180-degree turns — check against queued direction, not last frame's
+    if (!isOppositeDirection(nextDirection, newDirection)) {
       nextDirection = newDirection;
     }
   }
@@ -278,7 +278,7 @@ function startGameLoop(): void {
     lastTime = timestamp;
 
     update(deltaTime);
-    render();
+    render(deltaTime);
 
     if (gameState !== "game_over") {
       animationFrameId = requestAnimationFrame(gameLoop);
@@ -348,13 +348,6 @@ function update(deltaTime: number): void {
 
       // Score popup
       scorePopups.push({ x: head.x, y: head.y, text: "+10", alpha: 1.0 });
-
-      // Update high score
-      if (score > highScore) {
-        highScore = score;
-        // High score is loaded automatically from localStorage
-        scoreStorage.saveScore(highScore);
-      }
     }
   }
 }
@@ -370,14 +363,10 @@ function handleGameOver(): void {
   // Play game over sound
   soundManager.playGameOver();
 
-  // Save final score if it's a high score
+  // Save final score (updates high score and adds to history)
   if (score > highScore) {
     highScore = score;
-    // High score is loaded automatically from localStorage
-    scoreStorage.saveScore(highScore);
   }
-
-  // Save score to history
   scoreStorage.saveScore(score);
 
   render();
@@ -386,7 +375,7 @@ function handleGameOver(): void {
 /**
  * Render the game
  */
-function render(): void {
+function render(deltaTime = 16.67): void {
   renderer.clear();
 
   switch (gameState) {
@@ -395,10 +384,10 @@ function render(): void {
       break;
     case "playing":
     case "paused":
-      renderGame();
+      renderGame(deltaTime);
       break;
     case "game_over":
-      renderGame();
+      renderGame(deltaTime);
       renderGameOver();
       break;
   }
@@ -419,7 +408,7 @@ function renderMenu(): void {
 /**
  * Render game elements
  */
-function renderGame(): void {
+function renderGame(deltaTime: number): void {
   // Update animation phase
   pulsePhase += 0.15;
 
@@ -441,7 +430,7 @@ function renderGame(): void {
       popup.text,
       popup.alpha,
     );
-    popup.alpha -= 0.03;
+    popup.alpha -= 0.03 * (deltaTime / 16.67);
     if (popup.alpha <= 0) {
       scorePopups.splice(i, 1);
     }
@@ -530,7 +519,7 @@ function setupTouchControls(canvas: HTMLCanvasElement): void {
         newDirection = deltaY > 0 ? "down" : "up";
       }
 
-      if (gameState === "playing" && !isOppositeDirection(currentDirection, newDirection)) {
+      if (gameState === "playing" && !isOppositeDirection(nextDirection, newDirection)) {
         nextDirection = newDirection;
       }
     },

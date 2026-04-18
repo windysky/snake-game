@@ -50,7 +50,6 @@ describe("SoundManager", () => {
       // Save original
       const originalWindow = globalThis.window;
 
-      // @ts-expect-error - intentionally removing AudioContext from window
       (globalThis.window as any).AudioContext = undefined;
 
       const manager = new SoundManager();

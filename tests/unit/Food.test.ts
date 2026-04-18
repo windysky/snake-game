@@ -120,12 +120,12 @@ describe("Food", () => {
       expect(eaten).toBe(true);
     });
 
-    test("should relocate after being eaten", () => {
+    test("should relocate to new position", () => {
       const initialPosition = food.getPosition();
-      food.eat();
+      food.relocate();
       const newPosition = food.getPosition();
 
-      // Position should change after eating
+      // Position should change after relocating
       expect(newPosition.x !== initialPosition.x || newPosition.y !== initialPosition.y).toBe(true);
     });
   });

@@ -63,6 +63,11 @@ export class SoundManager {
       return;
     }
 
+    // Resume suspended context (browser autoplay policy)
+    if (this.context.state === "suspended") {
+      this.context.resume().catch(() => {});
+    }
+
     // Limit concurrent sounds (REQ-INF-033)
     if (this.activeSounds >= this.MAX_CONCURRENT_SOUNDS) {
       return;

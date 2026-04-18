@@ -45,14 +45,6 @@ export class Food {
   }
 
   /**
-   * Eat food and relocate to new position
-   * REQ-GAME-011: Food relocates after consumption
-   */
-  eat(): void {
-    this.position = this.generateRandomPosition([]);
-  }
-
-  /**
    * Relocate food to new random position
    * Optionally avoid occupied positions
    */
