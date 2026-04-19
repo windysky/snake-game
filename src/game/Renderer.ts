@@ -1,6 +1,7 @@
 // @MX:NOTE: Renderer - Canvas 2D rendering with integer coordinates
 // @MX:SPEC: SPEC-GAME-001
 
+import type { SnakeShape } from "../storage/SettingsStorage.ts";
 import type { Position } from "./Snake.ts";
 
 /**
@@ -74,22 +75,36 @@ export class Renderer {
   }
 
   /**
-   * Draw snake segments with rounded corners and head eyes
+   * Draw snake segments with configurable shape and colors
    * REQ-GAME-004: Use integer coordinates
    * REQ-GAME-043: Batch draw operations
    */
-  drawSnake(segments: Position[], color: string, cellSize = 20): void {
-    const radius = Math.max(1, cellSize * 0.2);
+  drawSnake(
+    segments: Position[],
+    color: string,
+    cellSize = 20,
+    shape: SnakeShape = "rounded",
+    headColor = "#22c55e",
+  ): void {
     for (let i = segments.length - 1; i >= 0; i--) {
       const x = Math.floor(segments[i].x);
       const y = Math.floor(segments[i].y);
+      const fillColor = i === 0 ? headColor : color;
 
-      this.ctx.beginPath();
-      this.roundRect(x + 0.5, y + 0.5, cellSize - 1, cellSize - 1, radius);
-      this.ctx.fillStyle = i === 0 ? "#22c55e" : color;
-      this.ctx.fill();
+      this.ctx.fillStyle = fillColor;
 
-      if (i === 0) {
+      if (shape === "diamond") {
+        this.drawDiamond(x, y, cellSize);
+      } else if (shape === "square") {
+        this.ctx.fillRect(x + 0.5, y + 0.5, cellSize - 1, cellSize - 1);
+      } else {
+        const radius = Math.max(1, cellSize * 0.2);
+        this.ctx.beginPath();
+        this.roundRect(x + 0.5, y + 0.5, cellSize - 1, cellSize - 1, radius);
+        this.ctx.fill();
+      }
+
+      if (i === 0 && shape !== "square") {
         this.ctx.fillStyle = "#ffffff";
         this.ctx.beginPath();
         this.ctx.arc(x + cellSize * 0.35, y + cellSize * 0.4, 2, 0, Math.PI * 2);
@@ -97,6 +112,19 @@ export class Renderer {
         this.ctx.fill();
       }
     }
+  }
+
+  private drawDiamond(x: number, y: number, cellSize: number): void {
+    const cx = x + cellSize / 2;
+    const cy = y + cellSize / 2;
+    const half = (cellSize - 1) / 2;
+    this.ctx.beginPath();
+    this.ctx.moveTo(cx, cy - half);
+    this.ctx.lineTo(cx + half, cy);
+    this.ctx.lineTo(cx, cy + half);
+    this.ctx.lineTo(cx - half, cy);
+    this.ctx.closePath();
+    this.ctx.fill();
   }
 
   /**

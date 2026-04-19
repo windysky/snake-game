@@ -83,6 +83,29 @@
           value="50"
           aria-label="Volume control"
         />
+        <button
+          id="settings-toggle"
+          type="button"
+          aria-label="Open settings"
+        >
+          ⚙️
+        </button>
+      </div>
+
+      <!-- Settings Overlay -->
+      <div id="settings-overlay">
+        <div id="settings-panel" role="dialog" aria-label="Game settings">
+          <h2>Settings</h2>
+          <div class="settings-section">
+            <h3>Snake Color</h3>
+            <div id="color-swatches" class="color-swatches"></div>
+          </div>
+          <div class="settings-section">
+            <h3>Snake Shape</h3>
+            <div id="shape-options" class="shape-options"></div>
+          </div>
+          <button id="settings-close" type="button">Close</button>
+        </div>
       </div>
 
       <!-- Instructions -->

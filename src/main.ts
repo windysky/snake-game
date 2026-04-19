@@ -8,8 +8,10 @@ import { Food } from "./game/Food.ts";
 import { Renderer } from "./game/Renderer.ts";
 import { type Direction, isOppositeDirection, Snake } from "./game/Snake.ts";
 import { ScoreStorage } from "./storage/ScoreStorage.ts";
+import { type GameSettings, SNAKE_COLORS, SNAKE_HEAD_COLORS } from "./storage/SettingsStorage.ts";
 import { GameControls } from "./ui/GameControls.ts";
 import { ScoreBoard } from "./ui/ScoreBoard.ts";
+import { SettingsPanel } from "./ui/SettingsPanel.ts";
 import { SoundControls } from "./ui/SoundControls.ts";
 
 // Game configuration
@@ -27,9 +29,11 @@ let renderer: Renderer;
 let scoreBoard: ScoreBoard;
 let gameControls: GameControls;
 let _soundControls: SoundControls;
+let settingsPanel: SettingsPanel;
 let soundManager: SoundManager;
 let scoreStorage: ScoreStorage;
 let gameState: "menu" | "playing" | "paused" | "game_over" = "menu";
+let gameSettings: GameSettings;
 let score = 0;
 let highScore = 0;
 let lastMoveTime = 0;
@@ -99,6 +103,18 @@ function init(): void {
       },
     },
   );
+
+  settingsPanel = new SettingsPanel(
+    {},
+    {
+      onSettingsChange: (settings: GameSettings) => {
+        gameSettings = settings;
+        if (gameState !== "playing") render();
+      },
+    },
+  );
+  settingsPanel.init();
+  gameSettings = settingsPanel.getSettings();
 
   // Set up keyboard input for direction
   document.addEventListener("keydown", handleKeyDown);
@@ -433,7 +449,13 @@ function renderGame(deltaTime: number): void {
   renderer.drawGrid(CELL_SIZE, "rgba(255,255,255,0.03)");
 
   // Draw snake
-  renderer.drawSnake(snake.getSegments(), "#4ade80", CELL_SIZE);
+  renderer.drawSnake(
+    snake.getSegments(),
+    SNAKE_COLORS[gameSettings.snakeColor],
+    CELL_SIZE,
+    gameSettings.snakeShape,
+    SNAKE_HEAD_COLORS[gameSettings.snakeColor],
+  );
 
   // Draw food with pulse
   renderer.drawFood(food.getPosition(), "#f87171", CELL_SIZE, pulsePhase);
